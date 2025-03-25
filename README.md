@@ -11,7 +11,7 @@ The official Cloudflare WARP client for Linux only listens on localhost for the 
 * Subscribe to Cloudflare WARP+
 
 ## How to use
-The socks proxy in exposed on port `40000`
+The socks proxy in exposed on port `1080`
 
 You can use these environment variables:
 * `FAMILIES_MODE`: Use one of `off`, `malware` and `full` values. (Default: `off`)
@@ -25,7 +25,7 @@ docker run -d --name=warp -e FAMILIES_MODE=full -e WARP_LICENSE=xxxxxxxx-xxxxxxx
 ```
 You can verify warp by visiting this url:
 ```
-curl -x socks5h://127.0.0.1:40000 -sL https://cloudflare.com/cdn-cgi/trace | grep warp
+curl -x socks5h://127.0.0.1:1080 -sL https://cloudflare.com/cdn-cgi/trace | grep warp
 
 warp=on
 ```

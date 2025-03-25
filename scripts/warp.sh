@@ -20,30 +20,34 @@ attempt_counter=0
 
 echo "Attempting to start warp-svc and register..."
 
-# Function to check service status and attempt registration
-function attempt_registration {
-  until warp-cli --accept-tos registration new &> /dev/null; do
+# Function to wait for warp-svc to start
+function wait_for_warp_svc {
+  until warp-cli --accept-tos status &> /dev/null; do
     echo "Wait for warp-svc to start... Attempt $((++attempt_counter)) of $MAX_ATTEMPTS"
     sleep 1
     if [[ $attempt_counter -ge $MAX_ATTEMPTS ]]; then
-      echo "Failed to register after $MAX_ATTEMPTS attempts. Exiting."
-      return 1
+      echo "Failed to start warp-svc after $MAX_ATTEMPTS attempts. Exiting."
+      exit 1
     fi
   done
-  echo "warp-svc has been started and registered successfully!"
+  echo "warp-svc started successfully!"
 }
+
+# Wait for warp-svc to start
+if wait_for_warp_svc; then
+  echo "warp-svc has been started successfully!"
+else
+  echo "There was an issue starting the service. Check logs for details."
+  kill $WARP_PID
+  exit 1
+fi
 
 # Check if registration is already obtained before with warp-cli registration show
 warp-cli --accept-tos registration show &> /dev/null
-if [[ $? -eq 0 ]]; then
-  if attempt_registration; then
-    echo "Service started and registered successfully."
-  else
-    echo "There was an issue starting the service or registering. Check logs for details."
-    kill $WARP_PID
-    exit 1
+  if [[ $? -ne 0 ]]; then
+    echo "Registering service ... "
+    warp-cli --accept-tos registration new &> /dev/null
   fi
-fi
 
 # Set the proxy port to 40000
 warp-cli --accept-tos proxy port 40000
