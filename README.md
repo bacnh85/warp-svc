@@ -21,7 +21,7 @@ You should mount `/var/lib/cloudflare-warp` directory of the container to your h
 
 ### Using as a local proxy with Docker
 ```
-docker run -d --name=warp -e FAMILIES_MODE=full -e WARP_LICENSE=xxxxxxxx-xxxxxxxx-xxxxxxxx -p 127.0.0.1:1080:1080 -v ${PWD}/warp:/var/lib/cloudflare-warp ghcr.io/aleskxyz/warp-svc:latest
+docker run -d --name=warp -e FAMILIES_MODE=full -e WARP_LICENSE=xxxxxxxx-xxxxxxxx-xxxxxxxx -p 127.0.0.1:1080:1080 -v ${PWD}/warp:/var/lib/cloudflare-warp ghcr.io/bacnh85/warp-svc:latest
 ```
 You can verify warp by visiting this url:
 ```
@@ -42,7 +42,7 @@ Success
 version: "3"
 services:
   warp:
-    image: ghcr.io/aleskxyz/warp-svc:latest
+    image: ghcr.io/bacnh85/warp-svc:latest
     expose:
     - 1080
     restart: always
