@@ -33,13 +33,16 @@ function attempt_registration {
   echo "warp-svc has been started and registered successfully!"
 }
 
-# Call the registration function
-if attempt_registration; then
-  echo "Service started and registered successfully."
-else
-  echo "There was an issue starting the service or registering. Check logs for details."
-  kill $WARP_PID
-  exit 1
+# Check if registration is already obtained before with warp-cli registration show
+warp-cli --accept-tos registration show &> /dev/null
+if [[ $? -eq 0 ]]; then
+  if attempt_registration; then
+    echo "Service started and registered successfully."
+  else
+    echo "There was an issue starting the service or registering. Check logs for details."
+    kill $WARP_PID
+    exit 1
+  fi
 fi
 
 # Set the proxy port to 40000
